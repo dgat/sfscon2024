@@ -2,6 +2,17 @@
     import { MapLibre, DefaultMarker, Popup } from "svelte-maplibre";
     import { onMount } from "svelte";
 
+    let csvData = [];
+
+    onMount(async () => {
+        const response = await fetch("/api/read-csv");
+        if (response.ok) {
+            csvData = await response.json();
+        } else {
+            console.error("Failed to load CSV data");
+        }
+    });
+
     let markers = [
         { lngLat: [-20, 0], name: "Africa" },
         { lngLat: [0, 0], name: "Prime Meridian" },
@@ -29,3 +40,26 @@
         </DefaultMarker>
     {/each}
 </MapLibre>
+
+{#if csvData.length > 0}
+    <table>
+        <thead>
+            <tr>
+                {#each Object.keys(csvData[0]) as header}
+                    <th>{header}</th>
+                {/each}
+            </tr>
+        </thead>
+        <tbody>
+            {#each csvData as row}
+                <tr>
+                    {#each Object.values(row) as value}
+                        <td>{value}</td>
+                    {/each}
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+{:else}
+    <p>Loading CSV data...</p>
+{/if}
