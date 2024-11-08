@@ -63,8 +63,8 @@ function parse_task(task) {
         task["tranbisort"],
         task["tranvonstrasse"],
         task["tranbisstrasse"],
-        null, // task.startCoordinates
-        null  // task.endCoordinates
+        [parseFloat(task["start_latitude"]), parseFloat(task["start_longitude"])],
+        [parseFloat(task["end_latitude"]), parseFloat(task["end_longitude"])],
     );
 }
 

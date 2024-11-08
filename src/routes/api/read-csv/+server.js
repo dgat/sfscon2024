@@ -10,7 +10,7 @@ export async function GET() {
 
   return new Promise((resolve, reject) => {
     fs.createReadStream(filePath)
-      .pipe(csv({ separator: ';' }))
+      .pipe(csv({ separator: ',' }))
       .on('data', (data) => results.push(data))
       .on('end', () => {
         resolve(json(results)); // Send the data as JSON
