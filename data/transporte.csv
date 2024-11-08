@@ -1,4 +1,4 @@
-﻿Transportnummer;Transportdatum;TRANHSTART;tranhende;tranvonort;tranvonstrasse;tranbisort;tranbisstrasse;Transportart;BEZUGNR;kmtotale;fuhrparkklasse;Sektionort
+Transportnummer;Transportdatum;TRANHSTART;tranhende;tranvonort;tranvonstrasse;tranbisort;tranbisstrasse;Transportart;BEZUGNR;kmtotale;fuhrparkklasse;Sektionort
 T200100058;01.01.2020;01:21;01:46;BRIXEN;KRANKENHAUS;SCHABS;SPINGESER STR. ;STUHL;;13;KTW;Brixen
 T200100001;01.01.2020;06:00;07:30;STEINHAUS;HITTLFELD ;BRUNECK;KRANKENHAUS;KANN GEHEN;;70;KTW;Luttach
 T200100002;01.01.2020;06:00;07:30;MÜHLWALD;MÜHLWALD-HAUPTORT ;BRUNECK;KRANKENHAUS;KANN GEHEN;T200100001;70;KTW;Luttach

@@ -1,16 +1,19 @@
 <script>
     import { MapLibre, DefaultMarker, Popup } from "svelte-maplibre";
     import { onMount } from "svelte";
+    import { parse_tasks } from "$lib/task";
 
     let time = $state(0);
     let time_span = $state(60);
 
     let csvData = $state([]);
+    let tasks = $state([]);
 
     onMount(async () => {
         const response = await fetch("/api/read-csv");
         if (response.ok) {
             csvData = await response.json();
+            tasks = parse_tasks(csvData);
         } else {
             console.error("Failed to load CSV data");
         }
