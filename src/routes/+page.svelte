@@ -2,26 +2,25 @@
     import { MapLibre, DefaultMarker, Popup } from "svelte-maplibre";
     import { onMount } from "svelte";
 
+    let time = $state(0);
+    let time_span = $state(60);
+
     let markers = [
         { lngLat: [-20, 0], name: "Africa" },
         { lngLat: [0, 0], name: "Prime Meridian" },
         { lngLat: [20, 0], name: "Africa" },
     ];
-
-    let mapClasses = "w-full h-96";
 </script>
 
 <h1 class="text-2xl text-center p-12">Welcome to MedRide</h1>
 <MapLibre
     style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-    class={mapClasses}
+    class="w-full h-96"
     standardControls
-    zoom={1}
-    center={[-20, 0]}
+    zoom={7}
+    center={[11.33982, 46.49067]}
 >
     {#each markers as { lngLat, name }}
-        <!-- Unlike the custom marker example, default markers do not have mouse events,
-    and popups only support the default openOn="click" behavior -->
         <DefaultMarker {lngLat} draggable>
             <Popup offset={[0, -10]}>
                 <div class="text-lg font-bold">{name}</div>
@@ -29,3 +28,26 @@
         </DefaultMarker>
     {/each}
 </MapLibre>
+<input
+    type="range"
+    min="0"
+    max="1440"
+    bind:value={time}
+    class="range"
+    step="5"
+/>
+<div class="flex w-full justify-between px-2 text-xs">
+    {#each { length: 24 } as _, i}
+        <span>{i + 1}</span>
+    {/each}
+</div>
+<input
+    type="range"
+    min="0"
+    max="120"
+    bind:value={time_span}
+    class="range range-xs mt-10"
+    step="5"
+/>
+
+<div>Current time: {time}+-{time_span / 2}</div>
