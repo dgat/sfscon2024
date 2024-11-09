@@ -23,6 +23,17 @@
         TRIENT: "bg-purple-300",
     };
 
+    let hospitalCoords = {
+        BRIXEN: [11.657792, 46.716413],
+        BOZEN: [11.20353, 46.29208],
+        STERZING: [11.4319398, 46.8963235],
+        TRIENT: [11.1257601, 46.0664228],
+        INNICHEN: [12.2791673, 46.7328719],
+        MERAN: [11.1594185, 46.6695547],
+        SCHLANDERS: [10.7734765, 46.6280688],
+        BRUNECK: [11.9355121, 46.7963194],
+    };
+
     function filterTasks() {
         return tasks.filter(
             (x) =>
