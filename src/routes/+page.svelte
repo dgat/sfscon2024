@@ -13,6 +13,8 @@
     let time = $state(0);
     let time_span = $state(60);
 
+    let added_to_transport = $state(0);
+
     let csvData = $state([]);
     let tasks = $state([]);
 
@@ -85,7 +87,6 @@
         let { duration, route } = await getTrip(uniqueCoordinates).catch(
             (error) => console.error("Error fetching route:", error),
         );
-        time = Math.min(transport.tasks.map((t) => t.getStartTime()));
 
         geometry = route;
         focusedTransport = transport;
@@ -122,6 +123,7 @@
         let transport = focusedTransport;
         focusedTransport = false;
         onTransportClick(transport);
+        added_to_transport++;
     }
 
     function autoSchedule() {
@@ -230,6 +232,7 @@
                                 }}
                             />
                         </GeoJSON>{/if}
+
                     {#each filteredTasks as task (task.id)}
                         <Marker
                             onAdd={() => addTaskToFocusedTransport(task)}
@@ -298,11 +301,13 @@
             </div>
             <div class="flex flex-col gap-2 overflow-scroll flex-1">
                 {#each scheduledTransports as transport}
-                    <Transport
-                        {transport}
-                        onclick={() => onTransportClick(transport)}
-                        focused={transport == focusedTransport}
-                    ></Transport>
+                    {#key added_to_transport}
+                        <Transport
+                            {transport}
+                            onclick={() => onTransportClick(transport)}
+                            focused={transport == focusedTransport}
+                        ></Transport>
+                    {/key}
                 {/each}
             </div>
         </div>
