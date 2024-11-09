@@ -11,6 +11,9 @@
     role="button"
     tabindex="0"
 >
+    <span>
+        {transport.tasks[0].date}
+    </span>
     <div class="flex items-center gap-2">
         <svg
             xmlns="http://www.w3.org/2000/svg"
