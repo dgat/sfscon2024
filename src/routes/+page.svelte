@@ -57,17 +57,26 @@
     }
 </script>
 
-<div class="h-screen flex flex-col">
-    <h1 class="text-2xl text-center p-4">Welcome to MedRide</h1>
-    <div class="main-section grid grid-cols-4 flex-1">
-        <div class="warenkorb-section p-4">
+<div class="h-screen max-h-screen flex flex-col p-2">
+    <div class="main-section grid grid-cols-4 flex-1 max-h-full">
+        <div
+            class="warenkorb-section px-4 overflow-scroll max-h-full flex flex-col"
+        >
             <Legende colors={hospitalsColors}></Legende>
-            <div class="selected-tasks mt-8">
-                <p class="text-lg">Selected Tasks</p>
+            <div class="selected-tasks mt-8 relative flex-1">
+                <p class="text-lg font-semibold">Selected Tasks</p>
                 <div class="flex flex-col gap-2">
                     {#each selectedTasks as task}
                         <SelectedTask {task}></SelectedTask>
                     {/each}
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-2">
+                    <button
+                        class="btn btn-primary btn-block {selectedTasks.length ==
+                        0
+                            ? 'btn-disabled'
+                            : ''}">Schedule transport</button
+                    >
                 </div>
             </div>
         </div>
