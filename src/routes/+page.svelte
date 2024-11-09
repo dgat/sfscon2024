@@ -4,6 +4,7 @@
     import { parse_tasks } from "$lib/task";
     import Marker from "./marker.svelte";
     import Legende from "./legende.svelte";
+    import HospitalMarker from "./hospital_marker.svelte";
 
     let time = $state(0);
     let time_span = $state(60);
@@ -50,7 +51,7 @@
 </script>
 
 <div class="h-screen flex flex-col">
-    <h1 class="text-2xl text-center p-12">Welcome to MedRide</h1>
+    <h1 class="text-2xl text-center p-4">Welcome to MedRide</h1>
     <div class="main-section grid grid-cols-4 flex-1">
         <div class="warenkorb-section p-4">
             <Legende colors={hospitalsColors}></Legende>
@@ -82,7 +83,7 @@
                             {task}
                         ></Marker>
                     {/each}
-                </MapLibre>
+                </MapLibre>HospitalMarker
             </div>
             <div class="slider-section py-6">
                 <input
