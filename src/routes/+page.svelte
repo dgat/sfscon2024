@@ -1,10 +1,11 @@
 <script>
-    import { MapLibre, GeoJSON, FillLayer } from "svelte-maplibre";
+    import { MapLibre, GeoJSON, FillLayer, LineLayer } from "svelte-maplibre";
     import { onMount } from "svelte";
     import { parse_tasks } from "$lib/task";
     import Marker from "./marker.svelte";
     import Legende from "./legende.svelte";
     import SelectedTask from "./selected_task.svelte";
+    import { getRoute } from "$lib/route";
 
     let time = $state(0);
     let time_span = $state(60);
@@ -38,10 +39,28 @@
     let filteredTasks = $derived.by(filterTasks);
 
     let overlay = $state(null);
+    let geometry = $state(null);
+
+    // Example usage with variable parameters
+    const coordinates = [
+        [
+            [11.9421, 46.7975], // Starting point
+            [11.65443, 46.71662], // Ending point
+        ],
+        [
+            [11.65443, 46.71662], // Starting point
+            [11.33772, 46.49497], // Ending point
+        ],
+    ];
 
     onMount(async () => {
+        let { duration, route } = await getRoute(coordinates).catch((error) =>
+            console.error("Error fetching route:", error),
+        );
+        geometry = route;
         overlay = await fetch("./southtyrol.geojson");
         overlay = await overlay.json();
+        console.log("Overlay:", overlay);
         const response = await fetch("/api/read-csv");
         if (response.ok) {
             csvData = await response.json();
@@ -92,6 +111,7 @@
                         [10.3, 47.08],
                         [12.52, 46.25],
                     ]}
+                    let:map
                 >
                     <GeoJSON id="states" data={overlay} promoteId="STATEFP">
                         <FillLayer
@@ -101,6 +121,20 @@
                             }}
                             beforeLayerType="symbol"
                             type="background"
+                        />
+                    </GeoJSON>
+                    <GeoJSON id="route" data={geometry}>
+                        <LineLayer
+                            layout={{
+                                "line-cap": "round",
+                                "line-join": "round",
+                            }}
+                            paint={{
+                                "line-width": 5,
+                                "line-dasharray": [5, 2],
+                                "line-color": "#008800",
+                                "line-opacity": 0.8,
+                            }}
                         />
                     </GeoJSON>
                     {#each filteredTasks as task (task.id)}
