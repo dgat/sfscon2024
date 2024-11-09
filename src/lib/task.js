@@ -34,7 +34,7 @@ export class Task {
     }
 
     isHinfahrt() {
-        return this.endStreet === "KRANKENHAUS";
+        return this.endStreet === "KRANKENHAUS" || this.endStreet === "BONVICINI" || this.endStreet === "NIERENZENTRUM" || this.endStreet === "BONVICINI-RADIO" || this.endStreet === "HYPERBARISCHES ZENTRUM" || this.endStreet === "OBJ - HYPERBARISCHE KAMMER" || this.endStreet === "KH . BOZEN" || this.endStreet === "NZ - NIERENZENTRUM";
     }
 
     toHumanEndTime() {

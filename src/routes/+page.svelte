@@ -175,7 +175,7 @@
                             type="background"
                         />
                     </GeoJSON>
-                    <GeoJSON id="route" data={geometry}>
+                    <!-- <GeoJSON id="route" data={geometry}>
                         <LineLayer
                             layout={{
                                 "line-cap": "round",
@@ -188,7 +188,7 @@
                                 "line-opacity": 0.8,
                             }}
                         />
-                    </GeoJSON>
+                    </GeoJSON> -->
                     {#each filteredTasks as task (task.id)}
                         <Marker
                             onSelect={() => selectMarker(task)}
