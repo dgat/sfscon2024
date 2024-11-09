@@ -114,6 +114,11 @@
         selectedTasks = [];
     }
 
+    function addTaskToFocusedTransport(task) {
+        tasks = tasks.filter((t) => t != task);
+        focusedTransport.tasks.push(task);
+    }
+
     function autoSchedule() {
         [...tasks].forEach((t) => {
             if (t.type == "LIEGE" && t.isDate("03.01.2020")) {
@@ -222,6 +227,8 @@
                         </GeoJSON>{/if}
                     {#each filteredTasks as task (task.id)}
                         <Marker
+                            onAdd={() => addTaskToFocusedTransport(task)}
+                            addDisabled={focusedTransport == null}
                             onSelect={() => selectMarker(task)}
                             lngLat={toDirection
                                 ? task.startCoordinates

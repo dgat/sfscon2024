@@ -1,6 +1,7 @@
 <script>
     import { Marker, Popup } from "svelte-maplibre";
-    let { color, number, lngLat, task, onSelect } = $props();
+    let { color, number, lngLat, task, onSelect, onAdd, addDisabled } =
+        $props();
 
     function getOutline(mobilityType) {
         switch (mobilityType) {
@@ -26,7 +27,7 @@
 
     <Popup offset={[0, 0]}>
         <div class="flex items-start justify-between">
-            <div class="left">
+            <div class="left flex flex-col">
                 <div>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -81,6 +82,14 @@
 
                     ca. {task.toHumanTravelTime()} to destination
                 </div>
+                {#if !addDisabled}
+                    <button
+                        disabled={addDisabled}
+                        onclick={onAdd}
+                        class="btn btn-xs self-center mt-2"
+                        >Add to transport</button
+                    >
+                {/if}
             </div>
             <div class=" text-black pr-2 pl-4">
                 {#if task.type == "STUHL"}
