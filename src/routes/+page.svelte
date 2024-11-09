@@ -2,6 +2,7 @@
     import { MapLibre, GeoJSON, FillLayer } from "svelte-maplibre";
     import { onMount } from "svelte";
     import { parse_tasks } from "$lib/task";
+    import { Transport } from "$lib/transport";
     import Marker from "./marker.svelte";
     import Legende from "./legende.svelte";
     import SelectedTask from "./selected_task.svelte";
@@ -13,6 +14,7 @@
     let tasks = $state([]);
 
     let selectedTasks = $state([]);
+    let scheduledTransports = $state([]);
 
     let hospitalsColors = {
         BRIXEN: "bg-red-300",
@@ -55,6 +57,12 @@
         tasks = tasks.filter((t) => t != task);
         selectedTasks.push(task);
     }
+
+    function scheduleTransport() {
+        let transport = new Transport("KVV", [...selectedTasks]);
+        scheduledTransports.push(transport);
+        selectedTasks = [];
+    }
 </script>
 
 <div class="h-screen max-h-screen flex flex-col p-2">
@@ -72,6 +80,7 @@
                 </div>
                 <div class="absolute bottom-0 left-0 right-0 p-2">
                     <button
+                        onclick={scheduleTransport}
                         class="btn btn-primary btn-block {selectedTasks.length ==
                         0
                             ? 'btn-disabled'
