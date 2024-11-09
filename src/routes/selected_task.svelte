@@ -2,7 +2,7 @@
     let { task } = $props();
 </script>
 
-<div class="bg-slate-100 p-2 rounded flex items-center justify-between">
+<div class="bg-slate-100 p-2 rounded-lg flex items-center justify-between">
     <div class="left">
         <div>
             <svg
