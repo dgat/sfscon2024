@@ -1,5 +1,11 @@
 <script>
-    import { MapLibre, DefaultMarker, Popup } from "svelte-maplibre";
+    import {
+        MapLibre,
+        DefaultMarker,
+        Popup,
+        GeoJSON,
+        FillLayer,
+    } from "svelte-maplibre";
     import { onMount } from "svelte";
     import { parse_tasks } from "$lib/task";
 
@@ -19,7 +25,11 @@
     }
     let filteredTasks = $derived.by(filterTasks);
 
+    let overlay = $state(null);
+
     onMount(async () => {
+        overlay = await fetch("./southtyrol.geojson");
+        overlay = await overlay.json();
         const response = await fetch("/api/read-csv");
         if (response.ok) {
             csvData = await response.json();
@@ -38,12 +48,23 @@
 
 <h1 class="text-2xl text-center p-12">Welcome to MedRide</h1>
 <MapLibre
-    style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+    style="https://tiles.versatiles.org/assets/styles/colorful.json"
     class="w-full h-96"
     standardControls
     zoom={7}
     center={[11.33982, 46.49067]}
 >
+    <GeoJSON id="states" data={overlay} promoteId="STATEFP">
+        <FillLayer
+            paint={{
+                "fill-color": "#000000",
+                "fill-opacity": 0.5,
+            }}
+            beforeLayerType="symbol"
+            type="background"
+        />
+    </GeoJSON>
+
     {#each filteredTasks as task}
         <script>
             console.log("hi");
