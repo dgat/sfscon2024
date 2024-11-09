@@ -20,7 +20,7 @@
                 />
             </svg>
             {task.startPlace}
-            <span class="text-xs">{task.startStreet}</span>
+            <span class="text-xs">um {task.toHumanStartTime()}</span>
         </div>
         <div>
             <svg
@@ -38,7 +38,7 @@
                 />
             </svg>
             {task.endPlace}
-            <span class="text-xs">{task.endStreet}</span>
+            <span class="text-xs">um {task.toHumanEndTime()}</span>
         </div>
     </div>
     <div class=" text-black pr-2">

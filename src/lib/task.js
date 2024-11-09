@@ -37,6 +37,13 @@ export class Task {
         return this.endStreet === "KRANKENHAUS";
     }
 
+    toHumanEndTime() {
+        return `${Math.floor(this.endTime / 60).toString().padStart(2, '0')}:${(this.endTime % 60).toString().padStart(2, '0')}`
+    }
+    toHumanStartTime() {
+        return `${Math.floor(this.startTime / 60).toString().padStart(2, '0')}:${(this.startTime % 60).toString().padStart(2, '0')}`
+    }
+
     getHinfahrtLatestStartTime() {
         return this.endTime - this.estimatedTime;
     }
