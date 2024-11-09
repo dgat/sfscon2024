@@ -86,6 +86,7 @@
             (error) => console.error("Error fetching route:", error),
         );
         time = Math.min(transport.tasks.map((t) => t.getStartTime()));
+
         geometry = route;
         focusedTransport = transport;
     }
