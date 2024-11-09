@@ -5,7 +5,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
     class="{focused
-        ? 'bg-slate-500'
+        ? 'bg-slate-500 text-white'
         : 'bg-slate-100 hover:bg-slate-300'} p-2 rounded-lg"
     {onclick}
     role="button"
@@ -62,7 +62,9 @@
         </div>
     </div>
     <div
-        class="plaetze text-sm flex justify-center w-full gap-4 text-slate-600"
+        class="plaetze text-sm flex justify-center w-full gap-4 {focused
+            ? 'text-slate-100'
+            : 'text-slate-600'}"
     >
         <span>
             <svg
