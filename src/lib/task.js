@@ -9,10 +9,11 @@ export class Task {
     startCoordinates = null;
     endCoordinates = null;
     type = null;
+    estimatedTime = null;
 
 
 
-    constructor(date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type) {
+    constructor(date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type, estimatedTime) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -23,6 +24,7 @@ export class Task {
         this.startCoordinates = startCoordinates; // { lat: Number, lng: Number }
         this.endCoordinates = endCoordinates;     // { lat: Number, lng: Number }
         this.type = type;
+        this.estimatedTime = estimatedTime;
     }
 
     isDate(date) {
@@ -31,6 +33,10 @@ export class Task {
 
     isHinfahrt() {
         return this.endStreet === "KRANKENHAUS";
+    }
+
+    getHinfahrtLatestStartTime() {
+        return this.endTime - this.estimatedTime;
     }
 
     // Getters and Setters for each property
@@ -97,6 +103,7 @@ function parse_task(task) {
         [parseFloat(task["start_longitude"]), parseFloat(task["start_latitude"])],
         [parseFloat(task["end_longitude"]), parseFloat(task["end_latitude"]),],
         task["Transportart"],
+        task["estimated_time"],
     );
 }
 

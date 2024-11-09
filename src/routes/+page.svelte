@@ -1,7 +1,7 @@
 <script>
     import {
         MapLibre,
-        DefaultMarker,
+        Marker,
         Popup,
         GeoJSON,
         FillLayer,
@@ -15,12 +15,24 @@
     let csvData = $state([]);
     let tasks = $state([]);
 
+    let hospitalsColors = {
+        BRIXEN: "bg-red-300",
+        BRUNECK: "bg-blue-300",
+        BOZEN: "bg-green-300",
+        MERAN: "bg-yellow-300",
+        SCHLANDERS: "bg-violet-300",
+        STERZING: "bg-orange-300",
+        INNICHEN: "bg-slate-300",
+    };
+
     function filterTasks() {
         return tasks.filter(
             (x) =>
                 x.isDate("03.01.2020") &&
                 x.isHinfahrt() &&
-                Math.abs(time - x.startTime) < time_span / 2,
+                Math.abs(time - x.getHinfahrtLatestStartTime()) <
+                    time_span / 2 &&
+                x.endTime - time > 0,
         );
     }
     let filteredTasks = $derived.by(filterTasks);
@@ -38,12 +50,6 @@
             console.error("Failed to load CSV data");
         }
     });
-
-    let markers = [
-        { lngLat: [-20, 0], name: "Africa" },
-        { lngLat: [0, 0], name: "Prime Meridian" },
-        { lngLat: [20, 0], name: "Africa" },
-    ];
 </script>
 
 <h1 class="text-2xl text-center p-12">Welcome to MedRide</h1>
@@ -66,11 +72,14 @@
     </GeoJSON>
 
     {#each filteredTasks as task}
-        <script>
-            console.log("hi");
-        </script>
-        <DefaultMarker lngLat={task.startCoordinates}>
-            <Popup offset={[0, -10]}>
+        <Marker
+            lngLat={task.startCoordinates}
+            class="{hospitalsColors[
+                task.endPlace
+            ]} grid h-6 w-6 place-items-center rounded-full border border-gray-200  text-black shadow-2xl focus:outline-2 focus:outline-black"
+        >
+            <span class="text-black">{task.endTime - time}</span>
+            <Popup offset={[0, 0]}>
                 <div>
                     <div>Start Time: {task.startTime}</div>
                     <div>End Time: {task.endTime}</div>
@@ -81,7 +90,7 @@
                     <div>End Place: {task.endPlace} ({task.endStreet})</div>
                 </div>
             </Popup>
-        </DefaultMarker>
+        </Marker>
     {/each}
 </MapLibre>
 <input
