@@ -118,9 +118,9 @@
     function addTaskToFocusedTransport(task) {
         tasks = tasks.filter((t) => t != task);
         focusedTransport.tasks.push(task);
-        tasks = [...tasks];
+
         let transport = focusedTransport;
-        focusedTransport = false;
+        focusedTransport = null;
         onTransportClick(transport);
     }
 
