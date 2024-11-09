@@ -1,13 +1,8 @@
 <script>
-    import {
-        MapLibre,
-        Marker,
-        Popup,
-        GeoJSON,
-        FillLayer,
-    } from "svelte-maplibre";
+    import { MapLibre, GeoJSON, FillLayer } from "svelte-maplibre";
     import { onMount } from "svelte";
     import { parse_tasks } from "$lib/task";
+    import Marker from "./marker.svelte";
 
     let time = $state(0);
     let time_span = $state(60);
@@ -74,23 +69,10 @@
     {#each filteredTasks as task}
         <Marker
             lngLat={task.startCoordinates}
-            class="{hospitalsColors[
-                task.endPlace
-            ]} grid h-6 w-6 place-items-center rounded-full border border-gray-200  text-black shadow-2xl focus:outline-2 focus:outline-black"
-        >
-            <span class="text-black">{task.endTime - time}</span>
-            <Popup offset={[0, 0]}>
-                <div>
-                    <div>Start Time: {task.startTime}</div>
-                    <div>End Time: {task.endTime}</div>
-                    <div>Duration: {task.getTravelTime()} minutes</div>
-                    <div>
-                        Start Place: {task.startPlace} ({task.startStreet})
-                    </div>
-                    <div>End Place: {task.endPlace} ({task.endStreet})</div>
-                </div>
-            </Popup>
-        </Marker>
+            color={hospitalsColors[task.endPlace]}
+            number={task.endTime - time}
+            {task}
+        ></Marker>
     {/each}
 </MapLibre>
 <input
