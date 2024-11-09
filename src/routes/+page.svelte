@@ -83,7 +83,6 @@
                         [10.3, 47.08],
                         [12.52, 46.25],
                     ]}
-                    minZoom={8}
                 >
                     <GeoJSON id="states" data={overlay} promoteId="STATEFP">
                         <FillLayer
