@@ -81,7 +81,6 @@
                             color={hospitalsColors[task.endPlace]}
                             number={task.endTime - time}
                             {task}
-                            mobilityType={task.type}
                         ></Marker>
                     {/each}
                 </MapLibre>
