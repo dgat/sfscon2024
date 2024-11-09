@@ -1,5 +1,17 @@
 export class Task {
-    constructor(startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates) {
+    date = null
+    startTime = null;
+    endTime = null;
+    startPlace = null;
+    endPlace = null;
+    startStreet = null;
+    endStreet = null;
+    startCoordinates = null;
+    endCoordinates = null;
+    type = null;
+
+    constructor(date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type) {
+        this.date = date;
         this.startTime = new Date(startTime);
         this.endTime = new Date(endTime);
         this.startPlace = startPlace;
@@ -8,6 +20,15 @@ export class Task {
         this.endStreet = endStreet;
         this.startCoordinates = startCoordinates; // { lat: Number, lng: Number }
         this.endCoordinates = endCoordinates;     // { lat: Number, lng: Number }
+        this.type = type;
+    }
+
+    isDate(date) {
+        return this.date == date;
+    }
+
+    isHinfahrt() {
+        return this.endStreet === "KRANKENHAUS";
     }
 
     // Getters and Setters for each property
@@ -19,6 +40,9 @@ export class Task {
 
     getStartPlace() { return this.startPlace; }
     setStartPlace(startPlace) { this.startPlace = startPlace; }
+
+    getType() { return this.type; }
+    setType(type) { this.type = type; }
 
     getEndPlace() { return this.endPlace; }
     setEndPlace(endPlace) { this.endPlace = endPlace; }
@@ -55,16 +79,23 @@ export class Task {
     }
 }
 
+function timeToMinutes(time) {
+    let array = time.split(":");
+    return parseInt(array[0]) * 60 + parseInt(array[1]);
+}
+
 function parse_task(task) {
     return new Task(
-        `${task["Transportdatum"]} ${task["TRANHSTART"]}`,
-        `${task["Transportdatum"]} ${task["tranhende"]}`,
+        task["Transportdatum"],
+        timeToMinutes(task["TRANHSTART"]),
+        timeToMinutes(task["tranhende"]),
         task["tranvonort"],
         task["tranbisort"],
         task["tranvonstrasse"],
         task["tranbisstrasse"],
-        [parseFloat(task["start_latitude"]), parseFloat(task["start_longitude"])],
-        [parseFloat(task["end_latitude"]), parseFloat(task["end_longitude"])],
+        [parseFloat(task["start_longitude"]), parseFloat(task["start_latitude"])],
+        [parseFloat(task["end_longitude"]), parseFloat(task["end_latitude"]),],
+        task["Transportart"],
     );
 }
 
