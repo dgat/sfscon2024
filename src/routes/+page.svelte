@@ -18,6 +18,7 @@
         SCHLANDERS: "bg-violet-300",
         STERZING: "bg-orange-300",
         INNICHEN: "bg-slate-300",
+        TRIENT: "bg-purple-300",
     };
 
     function filterTasks() {
@@ -47,56 +48,67 @@
     });
 </script>
 
-<h1 class="text-2xl text-center p-12">Welcome to MedRide</h1>
-<MapLibre
-    style="https://tiles.versatiles.org/assets/styles/colorful.json"
-    class="w-full h-96"
-    standardControls
-    zoom={7}
-    center={[11.33982, 46.49067]}
->
-    <GeoJSON id="states" data={overlay} promoteId="STATEFP">
-        <FillLayer
-            paint={{
-                "fill-color": "#000000",
-                "fill-opacity": 0.5,
-            }}
-            beforeLayerType="symbol"
-            type="background"
-        />
-    </GeoJSON>
+<div class="h-screen flex flex-col">
+    <h1 class="text-2xl text-center p-12">Welcome to MedRide</h1>
+    <div class="main-section grid grid-cols-4 flex-1">
+        <div class="warenkorb-section"></div>
+        <div class="mid-section col-span-2 flex flex-col">
+            <div class="map-section flex-1">
+                <MapLibre
+                    style="https://tiles.versatiles.org/assets/styles/colorful.json"
+                    class="w-full h-full"
+                    standardControls
+                    zoom={7}
+                    center={[11.33982, 46.49067]}
+                >
+                    <GeoJSON id="states" data={overlay} promoteId="STATEFP">
+                        <FillLayer
+                            paint={{
+                                "fill-color": "#000000",
+                                "fill-opacity": 0.5,
+                            }}
+                            beforeLayerType="symbol"
+                            type="background"
+                        />
+                    </GeoJSON>
+                    {#each filteredTasks as task}
+                        <Marker
+                            lngLat={task.startCoordinates}
+                            color={hospitalsColors[task.endPlace]}
+                            number={task.endTime - time}
+                            {task}
+                        ></Marker>
+                    {/each}
+                </MapLibre>
+            </div>
+            <div class="slider-section py-6">
+                <input
+                    type="range"
+                    min="0"
+                    max="1440"
+                    bind:value={time}
+                    class="range"
+                    step="5"
+                />
+                <div class="flex w-full justify-between px-2 text-xs">
+                    {#each { length: 24 } as _, i}
+                        <span>{i + 1}</span>
+                    {/each}
+                </div>
+                <input
+                    type="range"
+                    min="0"
+                    max="120"
+                    bind:value={time_span}
+                    class="range range-xs mt-10"
+                    step="5"
+                />
 
-    {#each filteredTasks as task}
-        <Marker
-            lngLat={task.startCoordinates}
-            color={hospitalsColors[task.endPlace]}
-            number={task.endTime - time}
-            {task}
-        ></Marker>
-    {/each}
-</MapLibre>
-<input
-    type="range"
-    min="0"
-    max="1440"
-    bind:value={time}
-    class="range"
-    step="5"
-/>
-<div class="flex w-full justify-between px-2 text-xs">
-    {#each { length: 24 } as _, i}
-        <span>{i + 1}</span>
-    {/each}
+                <div>Current time: {time}+-{time_span / 2}</div>
+
+                <div>Number Markers: {filteredTasks.length}</div>
+            </div>
+        </div>
+        <div class="transport-section"></div>
+    </div>
 </div>
-<input
-    type="range"
-    min="0"
-    max="120"
-    bind:value={time_span}
-    class="range range-xs mt-10"
-    step="5"
-/>
-
-<div>Current time: {time}+-{time_span / 2}</div>
-
-<div>Number Markers: {filteredTasks.length}</div>
