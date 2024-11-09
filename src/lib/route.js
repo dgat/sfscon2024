@@ -38,7 +38,7 @@ export async function getRoute(coordinates) {
             return null;
         }
     }
-    return {duration, route}
+    return { duration, route }
 }
 
 export async function getTrip(coordinates) {
@@ -64,9 +64,10 @@ export async function getTrip(coordinates) {
         }
         // Parse and return JSON data
         const data = await response.json();
-        let duration = data.routes[0].duration;
-        route.geometry = geometry;
-        return {duration, route};
+
+        let duration = data.trips[0].duration;
+        route.geometry = data.trips[0].geometry;
+        return { duration, route };
     } catch (error) {
         console.error("Failed to fetch route:", error);
         return null;
@@ -74,12 +75,12 @@ export async function getTrip(coordinates) {
 }
 
 export async function getTripWithEnd(coordinates, end) {
-    let {duration, route} = await getTrip(coordinates);
+    let { duration, route } = await getTrip(coordinates);
     let endPoint = route.geometry.coordinates[route.geometry.coordinates.length - 1];
-    let {duration2, route2} = await getRoute([endPoint, end]);
+    let { duration2, route2 } = await getRoute([endPoint, end]);
     duration += duration2;
     route.geometry.coordinates = route.geometry.coordinates.concat(route2.geometry.coordinates);
-    return {duration, route}
+    return { duration, route }
 }
 
 

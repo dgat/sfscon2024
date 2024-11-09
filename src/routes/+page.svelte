@@ -8,7 +8,7 @@
     import Transport from "./transport.svelte";
     import SelectedTask from "./selected_task.svelte";
     import PlaceholderSvg from "./placeholder_svg.svelte";
-    import { getRoute } from "$lib/route";
+    import { getTrip } from "$lib/route";
 
     let time = $state(0);
     let time_span = $state(60);
@@ -57,23 +57,30 @@
     let overlay = $state(null);
     let geometry = $state(null);
 
-    // Example usage with variable parameters
-    const coordinates = [
-        [
-            [11.9421, 46.7975], // Starting point
-            [11.65443, 46.71662], // Ending point
-        ],
-        [
-            [11.65443, 46.71662], // Starting point
-            [11.33772, 46.49497], // Ending point
-        ],
-    ];
+    let focusedTransport = $state(null);
+    async function onTransportClick(transport) {
+        if (focusedTransport === transport) {
+            focusedTransport = null;
+            geometry = null;
+            return;
+        }
 
-    onMount(async () => {
-        let { duration, route } = await getRoute(coordinates).catch((error) =>
-            console.error("Error fetching route:", error),
+        let coordinates = [];
+        transport.tasks.forEach((t) => coordinates.push(t.startCoordinates));
+        transport.tasks.forEach((t) => coordinates.push(t.endCoordinates));
+
+        const uniqueCoordinates = Array.from(
+            new Set(coordinates.map((coord) => JSON.stringify(coord))),
+        ).map((str) => JSON.parse(str));
+
+        let { duration, route } = await getTrip(uniqueCoordinates).catch(
+            (error) => console.error("Error fetching route:", error),
         );
         geometry = route;
+        focusedTransport = transport;
+    }
+
+    onMount(async () => {
         overlay = await fetch("./southtyrol.geojson");
         overlay = await overlay.json();
         console.log("Overlay:", overlay);
@@ -179,20 +186,21 @@
                             type="background"
                         />
                     </GeoJSON>
-                    <!-- <GeoJSON id="route" data={geometry}>
-                        <LineLayer
-                            layout={{
-                                "line-cap": "round",
-                                "line-join": "round",
-                            }}
-                            paint={{
-                                "line-width": 5,
-                                "line-dasharray": [5, 2],
-                                "line-color": "#008800",
-                                "line-opacity": 0.8,
-                            }}
-                        />
-                    </GeoJSON> -->
+                    {#if geometry != null}
+                        <GeoJSON id="route" data={geometry}>
+                            <LineLayer
+                                layout={{
+                                    "line-cap": "round",
+                                    "line-join": "round",
+                                }}
+                                paint={{
+                                    "line-width": 5,
+                                    "line-dasharray": [5, 2],
+                                    "line-color": "#008800",
+                                    "line-opacity": 0.8,
+                                }}
+                            />
+                        </GeoJSON>{/if}
                     {#each filteredTasks as task (task.id)}
                         <Marker
                             onSelect={() => selectMarker(task)}
@@ -230,7 +238,11 @@
             <p class="text-lg font-semibold pb-3">Scheduled Transports</p>
             <div class="flex flex-col gap-2">
                 {#each scheduledTransports as transport}
-                    <Transport {transport}></Transport>
+                    <Transport
+                        {transport}
+                        onclick={() => onTransportClick(transport)}
+                        focused={transport == focusedTransport}
+                    ></Transport>
                 {/each}
             </div>
         </div>

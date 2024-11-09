@@ -1,8 +1,16 @@
 <script>
-    let { transport } = $props();
+    let { transport, onclick, focused } = $props();
 </script>
 
-<div class="bg-slate-100 p-2 rounded-lg">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<div
+    class="{focused
+        ? 'bg-slate-500'
+        : 'bg-slate-100 hover:bg-slate-300'} p-2 rounded-lg"
+    {onclick}
+    role="button"
+    tabindex="0"
+>
     <div class="flex items-center gap-2">
         <svg
             xmlns="http://www.w3.org/2000/svg"
