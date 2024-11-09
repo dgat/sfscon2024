@@ -79,6 +79,11 @@
                     standardControls
                     zoom={7}
                     center={[11.33982, 46.49067]}
+                    bounds={[
+                        [10.3, 47.08],
+                        [12.52, 46.25],
+                    ]}
+                    minZoom={8}
                 >
                     <GeoJSON id="states" data={overlay} promoteId="STATEFP">
                         <FillLayer
@@ -97,7 +102,6 @@
                             color={hospitalsColors[task.endPlace]}
                             number={task.endTime - time}
                             {task}
-                            mobilityType={task.type}
                         ></Marker>
                     {/each}
                 </MapLibre>
