@@ -15,6 +15,7 @@
     let tasks = $state([]);
 
     let vehicleType = $state("Undefined");
+    let toDirection = $state(false);
 
     let selectedTasks = $state([]);
     let scheduledTransports = $state([]);
@@ -31,13 +32,22 @@
     };
 
     function filterTasks() {
+        if (toDirection) {
+            return tasks.filter(
+                (x) =>
+                    x.isDate("03.01.2020") &&
+                    x.isHinfahrt() &&
+                    Math.abs(time - x.getHinfahrtLatestStartTime()) <
+                        time_span / 2 &&
+                    x.endTime - time > 0,
+            );
+        }
         return tasks.filter(
             (x) =>
                 x.isDate("03.01.2020") &&
-                x.isHinfahrt() &&
-                Math.abs(time - x.getHinfahrtLatestStartTime()) <
-                    time_span / 2 &&
-                x.endTime - time > 0,
+                !x.isHinfahrt() &&
+                time - x.getStartTime() < time_span / 2 &&
+                time - x.getStartTime() > 0,
         );
     }
     let filteredTasks = $derived.by(filterTasks);
@@ -74,6 +84,26 @@
             class="warenkorb-section px-4 overflow-scroll max-h-full flex flex-col"
         >
             <Legende colors={hospitalsColors}></Legende>
+            <div class="switch">
+                <div class="join flex pt-4">
+                    <input
+                        class="join-item btn btn-sm flex-1"
+                        type="radio"
+                        name="from"
+                        aria-label="from hospital"
+                        bind:group={toDirection}
+                        value={false}
+                    />
+                    <input
+                        class="join-item btn btn-sm flex-1"
+                        type="radio"
+                        name="to"
+                        aria-label="to hospital"
+                        bind:group={toDirection}
+                        value={true}
+                    />
+                </div>
+            </div>
             <div class="selected-tasks mt-8 relative flex-1 flex flex-col">
                 <p class="text-lg font-semibold pb-3">Selected Tasks</p>
                 <div class="flex flex-col gap-2 flex-1">
@@ -128,9 +158,15 @@
                     {#each filteredTasks as task (task.id)}
                         <Marker
                             onSelect={() => selectMarker(task)}
-                            lngLat={task.startCoordinates}
-                            color={hospitalsColors[task.endPlace]}
-                            number={task.endTime - time}
+                            lngLat={toDirection
+                                ? task.startCoordinates
+                                : task.endCoordinates}
+                            color={hospitalsColors[
+                                toDirection ? task.endPlace : task.startPlace
+                            ]}
+                            number={toDirection
+                                ? task.endTime - time
+                                : time - task.getStartTime()}
                             {task}
                         ></Marker>
                     {/each}
