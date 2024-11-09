@@ -9,11 +9,21 @@
     let csvData = $state([]);
     let tasks = $state([]);
 
+    function filterTasks() {
+        return tasks.filter(
+            (x) =>
+                x.isDate("03.01.2020") &&
+                x.isHinfahrt() &&
+                Math.abs(time - x.startTime) < time_span / 2,
+        );
+    }
+    let filteredTasks = $derived.by(filterTasks);
+
     onMount(async () => {
         const response = await fetch("/api/read-csv");
         if (response.ok) {
             csvData = await response.json();
-            tasks = parse_tasks(csvData);
+            tasks = parse_tasks(csvData).filter((x) => x.startCoordinates[0]);
         } else {
             console.error("Failed to load CSV data");
         }
@@ -34,10 +44,21 @@
     zoom={7}
     center={[11.33982, 46.49067]}
 >
-    {#each markers as { lngLat, name }}
-        <DefaultMarker {lngLat} draggable>
+    {#each filteredTasks as task}
+        <script>
+            console.log("hi");
+        </script>
+        <DefaultMarker lngLat={task.startCoordinates}>
             <Popup offset={[0, -10]}>
-                <div class="text-lg font-bold">{name}</div>
+                <div>
+                    <div>Start Time: {task.startTime}</div>
+                    <div>End Time: {task.endTime}</div>
+                    <div>Duration: {task.getTravelTime()} minutes</div>
+                    <div>
+                        Start Place: {task.startPlace} ({task.startStreet})
+                    </div>
+                    <div>End Place: {task.endPlace} ({task.endStreet})</div>
+                </div>
             </Popup>
         </DefaultMarker>
     {/each}
@@ -66,25 +87,4 @@
 
 <div>Current time: {time}+-{time_span / 2}</div>
 
-{#if csvData.length > 0}
-    <table>
-        <thead>
-            <tr>
-                {#each Object.keys(csvData[0]) as header}
-                    <th>{header}</th>
-                {/each}
-            </tr>
-        </thead>
-        <tbody>
-            {#each csvData as row}
-                <tr>
-                    {#each Object.values(row) as value}
-                        <td>{value}</td>
-                    {/each}
-                </tr>
-            {/each}
-        </tbody>
-    </table>
-{:else}
-    <p>Loading CSV data...</p>
-{/if}
+<div>Number Markers: {filteredTasks.length}</div>

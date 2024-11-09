@@ -1,24 +1,48 @@
 export class Task {
-    constructor(startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates) {
-        this.startTime = new Date(startTime);
-        this.endTime = new Date(endTime);
+    date = null
+    startTime = null;
+    endTime = null;
+    startPlace = null;
+    endPlace = null;
+    startStreet = null;
+    endStreet = null;
+    startCoordinates = null;
+    endCoordinates = null;
+    type = null;
+
+    constructor(date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type) {
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.startPlace = startPlace;
         this.endPlace = endPlace;
         this.startStreet = startStreet;
         this.endStreet = endStreet;
         this.startCoordinates = startCoordinates; // { lat: Number, lng: Number }
         this.endCoordinates = endCoordinates;     // { lat: Number, lng: Number }
+        this.type = type;
+    }
+
+    isDate(date) {
+        return this.date == date;
+    }
+
+    isHinfahrt() {
+        return this.endStreet === "KRANKENHAUS";
     }
 
     // Getters and Setters for each property
     getStartTime() { return this.startTime; }
-    setStartTime(startTime) { this.startTime = new Date(startTime); }
+    setStartTime(startTime) { this.startTime = startTime; }
 
     getEndTime() { return this.endTime; }
-    setEndTime(endTime) { this.endTime = new Date(endTime); }
+    setEndTime(endTime) { this.endTime = endTime; }
 
     getStartPlace() { return this.startPlace; }
     setStartPlace(startPlace) { this.startPlace = startPlace; }
+
+    getType() { return this.type; }
+    setType(type) { this.type = type; }
 
     getEndPlace() { return this.endPlace; }
     setEndPlace(endPlace) { this.endPlace = endPlace; }
@@ -35,17 +59,16 @@ export class Task {
     getEndCoordinates() { return this.endCoordinates; }
     setEndCoordinates(coords) { this.endCoordinates = coords; }
 
-    // Calculate travel time in minutes
     getTravelTime() {
-        const durationMs = this.endTime - this.startTime;
-        return Math.floor(durationMs / 60000); // convert ms to minutes
+        const duration = this.endTime - this.startTime;
+        return duration;
     }
 
     // Method to get a summary of the task
     getSummary() {
         return `
-            Start Time: ${this.startTime.toLocaleString()}
-            End Time: ${this.endTime.toLocaleString()}
+            Start Time: ${this.startTime}
+            End Time: ${this.endTime}
             Duration: ${this.getTravelTime()} minutes
             Start Place: ${this.startPlace} (${this.startStreet})
             End Place: ${this.endPlace} (${this.endStreet})
@@ -55,16 +78,23 @@ export class Task {
     }
 }
 
+function timeToMinutes(time) {
+    let array = time.split(":");
+    return parseInt(array[0]) * 60 + parseInt(array[1]);
+}
+
 function parse_task(task) {
     return new Task(
-        `${task["Transportdatum"]} ${task["TRANHSTART"]}`,
-        `${task["Transportdatum"]} ${task["tranhende"]}`,
+        task["Transportdatum"],
+        timeToMinutes(task["TRANHSTART"]),
+        timeToMinutes(task["tranhende"]),
         task["tranvonort"],
         task["tranbisort"],
         task["tranvonstrasse"],
         task["tranbisstrasse"],
-        [parseFloat(task["start_latitude"]), parseFloat(task["start_longitude"])],
-        [parseFloat(task["end_latitude"]), parseFloat(task["end_longitude"])],
+        [parseFloat(task["start_longitude"]), parseFloat(task["start_latitude"])],
+        [parseFloat(task["end_longitude"]), parseFloat(task["end_latitude"]),],
+        task["Transportart"],
     );
 }
 
