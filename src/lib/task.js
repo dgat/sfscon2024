@@ -49,6 +49,9 @@ export class Task {
     toHumanStartTime() {
         return `${Math.floor(this.startTime / 60).toString().padStart(2, '0')}:${(this.startTime % 60).toString().padStart(2, '0')}`
     }
+    toHumanTravelTime() {
+        return `${Math.floor(this.getTravelTime() / 60).toString().padStart(2, '0')}:${(this.getTravelTime() % 60).toString().padStart(2, '0')}`
+    }
 
     getHinfahrtLatestStartTime() {
         return this.endTime - this.estimatedTime;
