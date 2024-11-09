@@ -83,7 +83,7 @@
                             {task}
                         ></Marker>
                     {/each}
-                </MapLibre>HospitalMarker
+                </MapLibre>
             </div>
             <div class="slider-section py-6">
                 <input
