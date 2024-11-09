@@ -1,4 +1,5 @@
 export class Task {
+    id = null;
     date = null
     startTime = null;
     endTime = null;
@@ -13,7 +14,8 @@ export class Task {
 
 
 
-    constructor(date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type, estimatedTime) {
+    constructor(id, date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type, estimatedTime) {
+        this.id = id;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -93,6 +95,7 @@ function timeToMinutes(time) {
 
 function parse_task(task) {
     return new Task(
+        task["Transportnummer"],
         task["Transportdatum"],
         timeToMinutes(task["TRANHSTART"]),
         timeToMinutes(task["tranhende"]),

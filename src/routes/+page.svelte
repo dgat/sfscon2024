@@ -4,13 +4,15 @@
     import { parse_tasks } from "$lib/task";
     import Marker from "./marker.svelte";
     import Legende from "./legende.svelte";
-    import HospitalMarker from "./hospital_marker.svelte";
+    import SelectedTask from "./selected_task.svelte";
 
     let time = $state(0);
     let time_span = $state(60);
 
     let csvData = $state([]);
     let tasks = $state([]);
+
+    let selectedTasks = $state([]);
 
     let hospitalsColors = {
         BRIXEN: "bg-red-300",
@@ -48,6 +50,11 @@
             console.error("Failed to load CSV data");
         }
     });
+
+    function selectMarker(task) {
+        tasks = tasks.filter((t) => t != task);
+        selectedTasks.push(task);
+    }
 </script>
 
 <div class="h-screen flex flex-col">
@@ -55,6 +62,14 @@
     <div class="main-section grid grid-cols-4 flex-1">
         <div class="warenkorb-section p-4">
             <Legende colors={hospitalsColors}></Legende>
+            <div class="selected-tasks mt-8">
+                <p class="text-lg">Selected Tasks</p>
+                <div class="flex flex-col gap-2">
+                    {#each selectedTasks as task}
+                        <SelectedTask {task}></SelectedTask>
+                    {/each}
+                </div>
+            </div>
         </div>
         <div class="mid-section col-span-2 flex flex-col">
             <div class="map-section flex-1">
@@ -75,8 +90,9 @@
                             type="background"
                         />
                     </GeoJSON>
-                    {#each filteredTasks as task}
+                    {#each filteredTasks as task (task.id)}
                         <Marker
+                            onSelect={() => selectMarker(task)}
                             lngLat={task.startCoordinates}
                             color={hospitalsColors[task.endPlace]}
                             number={task.endTime - time}
