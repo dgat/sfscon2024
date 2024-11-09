@@ -7,6 +7,7 @@
     import Legende from "./legende.svelte";
     import Transport from "./transport.svelte";
     import SelectedTask from "./selected_task.svelte";
+    import PlaceholderSvg from "./placeholder_svg.svelte";
     import { getRoute } from "$lib/route";
 
     let time = $state(0);
@@ -129,6 +130,9 @@
                     {#each selectedTasks as task}
                         <SelectedTask {task}></SelectedTask>
                     {/each}
+                    {#if selectedTasks.length == 0}
+                        <PlaceholderSvg></PlaceholderSvg>
+                    {/if}
                 </div>
                 <div class="sticky bottom-0 left-0 right-0 p-2 bg-white">
                     <select
@@ -220,18 +224,6 @@
                         <span>{i + 1}</span>
                     {/each}
                 </div>
-                <input
-                    type="range"
-                    min="0"
-                    max="120"
-                    bind:value={time_span}
-                    class="range range-xs mt-10"
-                    step="5"
-                />
-
-                <div>Current time: {time}+-{time_span / 2}</div>
-
-                <div>Number Markers: {filteredTasks.length}</div>
             </div>
         </div>
         <div class="transport-section px-4">
