@@ -2,9 +2,10 @@
     import { MapLibre, GeoJSON, FillLayer } from "svelte-maplibre";
     import { onMount } from "svelte";
     import { parse_tasks } from "$lib/task";
-    import { Transport } from "$lib/transport";
+    import { Transport as TP } from "$lib/transport";
     import Marker from "./marker.svelte";
     import Legende from "./legende.svelte";
+    import Transport from "./transport.svelte";
     import SelectedTask from "./selected_task.svelte";
 
     let time = $state(0);
@@ -12,6 +13,8 @@
 
     let csvData = $state([]);
     let tasks = $state([]);
+
+    let vehicleType = $state("Undefined");
 
     let selectedTasks = $state([]);
     let scheduledTransports = $state([]);
@@ -59,7 +62,7 @@
     }
 
     function scheduleTransport() {
-        let transport = new Transport("KVV", [...selectedTasks]);
+        let transport = new TP(vehicleType, [...selectedTasks]);
         scheduledTransports.push(transport);
         selectedTasks = [];
     }
@@ -71,14 +74,24 @@
             class="warenkorb-section px-4 overflow-scroll max-h-full flex flex-col"
         >
             <Legende colors={hospitalsColors}></Legende>
-            <div class="selected-tasks mt-8 relative flex-1">
-                <p class="text-lg font-semibold">Selected Tasks</p>
-                <div class="flex flex-col gap-2">
+            <div class="selected-tasks mt-8 relative flex-1 flex flex-col">
+                <p class="text-lg font-semibold pb-3">Selected Tasks</p>
+                <div class="flex flex-col gap-2 flex-1">
                     {#each selectedTasks as task}
                         <SelectedTask {task}></SelectedTask>
                     {/each}
                 </div>
-                <div class="absolute bottom-0 left-0 right-0 p-2">
+                <div class="sticky bottom-0 left-0 right-0 p-2 bg-white">
+                    <select
+                        class="select select-bordered w-full mb-2"
+                        bind:value={vehicleType}
+                    >
+                        <option selected>Undefined</option>
+                        <option>KTW</option>
+                        <option>MFF1</option>
+                        <option>MFF2</option>
+                        <option>PKW</option>
+                    </select>
                     <button
                         onclick={scheduleTransport}
                         class="btn btn-primary btn-block {selectedTasks.length ==
@@ -151,6 +164,13 @@
                 <div>Number Markers: {filteredTasks.length}</div>
             </div>
         </div>
-        <div class="transport-section"></div>
+        <div class="transport-section px-4">
+            <p class="text-lg font-semibold pb-3">Scheduled Transports</p>
+            <div class="flex flex-col gap-2">
+                {#each scheduledTransports as transport}
+                    <Transport {transport}></Transport>
+                {/each}
+            </div>
+        </div>
     </div>
 </div>
