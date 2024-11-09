@@ -10,6 +10,8 @@ export class Task {
     endCoordinates = null;
     type = null;
 
+
+
     constructor(date, startTime, endTime, startPlace, endPlace, startStreet, endStreet, startCoordinates, endCoordinates, type) {
         this.date = date;
         this.startTime = startTime;
