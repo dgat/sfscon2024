@@ -108,18 +108,18 @@
                     <input
                         class="join-item btn btn-sm flex-1"
                         type="radio"
-                        name="from"
-                        aria-label="from hospital"
-                        bind:group={toDirection}
-                        value={false}
-                    />
-                    <input
-                        class="join-item btn btn-sm flex-1"
-                        type="radio"
                         name="to"
                         aria-label="to hospital"
                         bind:group={toDirection}
                         value={true}
+                    />
+                    <input
+                        class="join-item btn btn-sm flex-1"
+                        type="radio"
+                        name="from"
+                        aria-label="from hospital"
+                        bind:group={toDirection}
+                        value={false}
                     />
                 </div>
             </div>

@@ -23,8 +23,14 @@ export class Task {
         this.endPlace = endPlace;
         this.startStreet = startStreet;
         this.endStreet = endStreet;
-        this.startCoordinates = startCoordinates; // { lat: Number, lng: Number }
-        this.endCoordinates = endCoordinates;     // { lat: Number, lng: Number }
+        if (this.startPlace == "BOZEN")
+            this.startCoordinates = [11.331212, 46.486816]
+        else
+            this.startCoordinates = startCoordinates; // { lat: Number, lng: Number }
+        if (this.endPlace == "BOZEN")
+            this.endCoordinates = [11.331212, 46.486816]
+        else
+            this.endCoordinates = endCoordinates;     // { lat: Number, lng: Number }
         this.type = type;
         this.estimatedTime = estimatedTime;
     }
